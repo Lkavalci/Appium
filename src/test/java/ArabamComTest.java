@@ -1,9 +1,18 @@
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.AndroidElement;
 import io.appium.java_client.remote.MobileCapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 public class ArabamComTest {
 
+
+    AndroidDriver<AndroidElement> driver;// Android cihazlar icin kullanilmasi gereken driverdir. ios da kullanılmaz.
 
     // Arabam kac para bolumune tiklayalim
 // Aracimin fiyatini merak ediyorum bolumunetiklayalim
@@ -21,8 +30,8 @@ public class ArabamComTest {
 // aracimizin fiyatinin 500.000 tl den fazla oldugunu test edelim
 // uygulamayi kapatalim
 
-    @Test
-    public void arabamtest(){
+    @BeforeTest
+    public void arabamTestSetup() throws MalformedURLException {
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
@@ -32,6 +41,15 @@ public class ArabamComTest {
         capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME,"UiAutomator2");
 
         capabilities.setCapability("appPackage", "com.dogan.arabam"); // com.dogan.arabam-->Bu uygulamanın kimliği oluyor.
-        capabilities.setCapability("appActivity", "");
+        // Hangi uygulama uzerinde calismak istiyorsak apk infodan o uygulamanin degerini aliyoruz
+
+        capabilities.setCapability("appActivity", "com.dogan.arabam.presentation.feature.home.HomeActivity");// Uygulamayi actiktan sonra hangi sayfadan baslayacagimizi orn; Anasayfa, Profil, vb
+        // locate alırken home activity tercih edilir.
+
+
+        driver=new AndroidDriver<>(new URL("http://127.0.0.1:4723/wd/hub"),capabilities);
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS); // 30 sn bekle çalışmazsa işlemi bitirmesi için komut girdik
+
+
     }
 }
