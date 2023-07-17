@@ -1,3 +1,5 @@
+package tests;
+
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
@@ -42,7 +44,7 @@ public class Calculator_Test {
 
 
 
-    driver.activateApp("com.google.android.calculator");
+    driver.activateApp("com.google.android.calculator"); // bir uygulamayı sadece driver ile degil baska turlude active edebiliriz.
     // uygulamanin yuklendigini dogrular(isInstalled)
     Assert.assertTrue(driver.isAppInstalled("com.google.android.calculator"));
     // uygulamanin acildigini dogrular
@@ -57,10 +59,10 @@ public class Calculator_Test {
     driver.findElementByAccessibilityId("equals").click();
     String sonuc=driver.findElementById("com.google.android.calculator:id/result_final").getText();
     System.out.println(sonuc);
-    Assert.assertEquals(Integer.parseInt(sonuc),1600);
+    Assert.assertEquals(Integer.parseInt(sonuc),1600); // PARSEıNT yaparak string i int. a cevirdik.
 
 
-// AC butonuna tiklayarak ana ekrani temizler
+
 }
 
 }
