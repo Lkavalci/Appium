@@ -42,7 +42,8 @@ public class ArabamComTest {
         capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION,"10.0");
         capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME,"UiAutomator2");
         capabilities.setCapability("appPackage","com.dogan.arabam"); // Hangi uygulama uzerinde calismak istiyorsak apk infodan o uygulamanin degerini aliyoruz
-        capabilities.setCapability("appActivity","com.dogan.arabam.presentation.feature.home.HomeActivity"); // Uygulamayi actiktan sonra hangi sayfadan baslayacagimizi orn; Anasayfa, Profil, vb
+        capabilities.setCapability("appActivity","com.dogan.arabam.presentation.feature.home.HomeActivity"); // Uygulamayi actiktan sonra hangi sayfadan baslayacagimizi orn;
+        // Anasayfa, Profil, vb (homeActivity veya main Activity ile başlar)
         driver=new AndroidDriver<AndroidElement>(new URL("http://127.0.0.1:4723/wd/hub"),capabilities);
         driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
     }
@@ -64,9 +65,10 @@ public class ArabamComTest {
         Thread.sleep(2000);
         TouchAction touchAction=new TouchAction<>(driver);
         touchAction
-                .press(PointOption.point(531,1689)).
-                waitAction(WaitOptions.waitOptions(Duration.ofMillis(400)))
-                .moveTo(PointOption.point(531,400)).release().perform();
+                .press(PointOption.point(531,1689)). // parmagını bas
+                waitAction(WaitOptions.waitOptions(Duration.ofMillis(400))) // bekle (sure ne kadar kısa olursa o kadar daha hızlı kaydırır)
+                .moveTo(PointOption.point(531,400)) // belirlenen koordinatlara kaydır, sürükle
+                .release().perform(); // parmagını kaldır
         Thread.sleep(1000);
 
         driver.findElementByXPath("//*[@text='Volkswagen']").click();
@@ -87,9 +89,9 @@ public class ArabamComTest {
         touchAction.press(PointOption.point(428,1138)).release().perform();
         Thread.sleep(1000);
         // aracin km bilgilerini girelim
-        if (driver.isKeyboardShown()){
+        if (driver.isKeyboardShown()){ //eger klavye görünüyorsa klavyeyi kullanarak "50bin" gir
             driver.getKeyboard().pressKey("50000");
-        } else {
+        } else { // değilse aldıgımız locate uzerinden "100bin" gir
             driver.findElementById("com.dogan.arabam:id/et_km").sendKeys("100000");
         }
 
@@ -113,8 +115,8 @@ public class ArabamComTest {
         Thread.sleep(1000);
         // aracimizin fiyatinin 500000 tl den fazla oldugunu test edelim
         String aracinFiyati=driver.findElementById("com.dogan.arabam:id/tvAveragePrice").getText();
-        aracinFiyati=aracinFiyati.replaceAll("\\D",""); // 1.550.000 Tl
-        System.out.println(aracinFiyati); //1550000
+        aracinFiyati=aracinFiyati.replaceAll("\\D",""); // 1.550.000 Tl  // DIGIT olmayan her bir seyden kurtulmak ıcın hiclike cevirdik
+        System.out.println(aracinFiyati); //1550000 boyle oluyor
 
         Assert.assertTrue(Integer.parseInt(aracinFiyati)>500000);
         // uygulamayi kapatalim
